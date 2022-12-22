@@ -17,7 +17,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Logout from '@mui/icons-material/Logout';
-import { mainListItems, secondaryListItems } from './listItems';
+import { mainListItems } from './listItems';
 import Drawer from '@mui/material/Drawer';
 
 const drawerWidth = 240;
@@ -61,7 +61,7 @@ const CustomDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== '
                 }),
                 width: theme.spacing(7),
                 [theme.breakpoints.up('sm')]: {
-                    width: theme.spacing(9),
+                    width: theme.spacing(0),
                 },
             }),
         },
@@ -69,9 +69,13 @@ const CustomDrawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== '
 );
 
 function Header() {
-    const [open, setOpen] = React.useState(true);
-    const toggleDrawer = () => {
-        setOpen(!open);
+    const [openMobile, setOpenMobile] = React.useState(false);
+    const [openDesktop, setOpenDesktop] = React.useState(true);
+    const toggleMobileDrawer = () => {
+        setOpenMobile(!openMobile);
+    };
+    const toggleDesktopDrawer = () => {
+        setOpenDesktop(!openDesktop);
     };
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openMenu = Boolean(anchorEl);
@@ -84,7 +88,7 @@ function Header() {
     return (
         <>
             <CssBaseline />
-            <CustomAppBar position="absolute">
+            <CustomAppBar>
                 <Toolbar>
                     <Box sx={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
                         <Box sx={{ display: 'flex' }}>
@@ -92,7 +96,18 @@ function Header() {
                                 edge="start"
                                 color="inherit"
                                 aria-label="open drawer"
-                                onClick={toggleDrawer}
+                                onClick={toggleDesktopDrawer}
+                                sx={{display:{xs:"none",sm:"flex"}}}
+                               
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            <IconButton
+                                edge="start"
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={toggleMobileDrawer}
+                                sx={{display:{xs:"flex",sm:"none"}}}
                             >
                                 <MenuIcon />
                             </IconButton>
@@ -173,19 +188,17 @@ function Header() {
                 </Toolbar>
             </CustomAppBar>
             <Box >
-                <CustomDrawer variant="permanent" open={open}
+                <CustomDrawer variant="permanent" open={openDesktop}
                     sx={{ display: { xs: 'none', sm: 'block' } }}>
                     <Toolbar />
                     <Divider />
                     <List component="nav">
                         {mainListItems}
-                        <Divider sx={{ my: 1 }} />
-                        {secondaryListItems}
                     </List>
                 </CustomDrawer>
-                <Drawer variant="temporary" open={open}
+                <Drawer variant="temporary" open={openMobile}
                     sx={{ display: { xs: 'block', sm: 'none', zIndex: (theme) => (theme.zIndex.drawer + 2) } }}
-                    onClose={toggleDrawer}
+                    onClose={toggleMobileDrawer}
                 >
                     <Toolbar >
                         <Typography
@@ -201,8 +214,6 @@ function Header() {
                     <Divider />
                     <List component="nav">
                         {mainListItems}
-                        <Divider sx={{ my: 1 }} />
-                        {secondaryListItems}
                     </List>
                 </Drawer>
 
